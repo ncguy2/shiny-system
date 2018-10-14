@@ -4,8 +4,8 @@ import net.ncguy.foundation.module.Module;
 
 public class RenderModule extends Module {
 
-    public RenderModule(String name) {
-        super(name);
+    public RenderModule() {
+        super("Renderer");
     }
 
     @Override

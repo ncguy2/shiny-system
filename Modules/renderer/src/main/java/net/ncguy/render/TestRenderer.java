@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 public class TestRenderer extends BasicRenderer {
 
     ModelBatch batch;
-    PerspectiveCamera camera;
+    public PerspectiveCamera camera;
     Environment environment;
 
     @Override

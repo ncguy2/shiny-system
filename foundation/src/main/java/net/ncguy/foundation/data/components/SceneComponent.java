@@ -17,9 +17,10 @@ public class SceneComponent<T extends SceneComponent> extends EntityComponent<T>
         childComponents = new ArrayList<>();
     }
 
-    public void addChild(EntityComponent<?> component) {
+    public <T extends EntityComponent<?>> T add(T component) {
         childComponents.add(component);
         component._onAddToComponent(this);
+        return component;
     }
 
     @Override

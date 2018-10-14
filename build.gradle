@@ -14,11 +14,12 @@ buildscript {
 allprojects {
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+    apply plugin: 'java'
+
 }
 
 configure(subprojects) {
-    apply plugin: 'java'
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_9
 }
 
 subprojects {
