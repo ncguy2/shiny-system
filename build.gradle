@@ -19,7 +19,7 @@ allprojects {
 }
 
 configure(subprojects) {
-    sourceCompatibility = JavaVersion.VERSION_1_9
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
 subprojects {
