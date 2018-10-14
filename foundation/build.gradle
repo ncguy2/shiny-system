@@ -1,0 +1,25 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-foundation'
+
+dependencies {
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    compile "com.sudoplay.joise:joise:$joiseVersion"
+    compile "com.github.czyzby:gdx-websocket-serialization:$websocketSerializationVersion"
+    compile "com.github.czyzby:gdx-websocket:$websocketVersion"
+    compile "com.github.czyzby:gdx-kiwi:$kiwiVersion"
+    compile "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
+    compile "com.github.czyzby:gdx-lml-vis:$lmlVisVersion"
+    compile "com.kotcrab.vis:vis-ui:$visUiVersion"
+    compile "com.github.tommyettinger:regexodus:$regExodusVersion"
+    compile "net.dermetfan.libgdx-utils:libgdx-utils:$utilsVersion"
+    compile "com.strongjoshua:libgdx-inGameConsole:$inGameConsoleVersion"
+
+    compile "org.reflections:reflections:0.9.11"
+    compile "com.google.code.gson:gson:2.8.2"
+
+    compile "org.lwjgl:lwjgl-opengl:3.1.3"
+    compile "com.esotericsoftware:kryo:5.0.0-RC1"
+}

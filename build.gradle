@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        google()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+    dependencies {
+        classpath "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
+
+allprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+}
+
+configure(subprojects) {
+    apply plugin: 'java'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+subprojects {
+    version = '0.0.1-SNAPSHOT'
+    ext.appName = 'Game'
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+}
+
+tasks.eclipse.doLast {
+    delete '.project'
+    delete '.classpath'
+    delete '.settings/'
+}
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+task pack << {
+    TexturePacker.process(
+            'raw/ui',
+            'assets/ui',
+            'skin'
+    )
+}

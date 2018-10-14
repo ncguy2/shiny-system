@@ -1,0 +1,6 @@
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-world-module'
+
+dependencies {
+    compile project(':foundation')
+}
