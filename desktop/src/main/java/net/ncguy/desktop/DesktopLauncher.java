@@ -22,6 +22,7 @@ public class DesktopLauncher {
         for (int i = 0; i < sizes.length; i++) {
             paths[i] = "libgdx" + sizes[i] + ".png";
         }
+
         configuration.useOpenGL3(true, 4, 5);
         configuration.setTitle("Game");
         configuration.setWindowedMode(1600, 900);
