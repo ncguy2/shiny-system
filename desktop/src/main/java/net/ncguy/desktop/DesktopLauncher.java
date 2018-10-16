@@ -4,9 +4,17 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import net.ncguy.core.GameLauncher;
 
+import java.lang.ProcessHandle;
+import java.util.Scanner;
+
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {
     public static void main(String[] args) {
+        long pid = ProcessHandle.current().pid();
+        System.out.println("Process id: " + pid);
+        System.out.println("Renderdoc injection point");
+        new Scanner(System.in).next();
+
         createApplication();
     }
 //
