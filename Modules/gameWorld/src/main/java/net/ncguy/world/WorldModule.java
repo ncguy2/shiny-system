@@ -12,6 +12,10 @@ public class WorldModule extends Module {
         this.world = world;
     }
 
+    public World getWorld() {
+        return world;
+    }
+
     @Override
     public void step(float delta) {
         world.update(delta);

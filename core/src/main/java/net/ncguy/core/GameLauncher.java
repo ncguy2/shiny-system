@@ -2,6 +2,7 @@ package net.ncguy.core;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -18,6 +19,8 @@ public class GameLauncher extends Game {
 
     RenderWrapper renderWrapper;
     WorldModule worldModule;
+    Entity cubeEntity;
+    MaterialComponent mtlComp;
 
     @Override
     public void create() {
@@ -25,9 +28,9 @@ public class GameLauncher extends Game {
 
         World world = new World();
 
-        Entity cubeEntity = world.add(new CubeComponent());
+        cubeEntity = world.add(new CubeComponent());
 
-        MaterialComponent mtlComp = cubeEntity.getRootComponent().add(new MaterialComponent());
+        mtlComp = cubeEntity.getRootComponent().add(new MaterialComponent());
         mtlComp.mtl.set(ColorAttribute.createDiffuse(Color.RED));
 
         TestRenderer renderer = new TestRenderer();
@@ -47,6 +50,18 @@ public class GameLauncher extends Game {
 
     @Override
     public void render() {
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+            ColorAttribute attr = (ColorAttribute) mtlComp.mtl.get(ColorAttribute.Diffuse);
+            attr.color.set(Color.RED);
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+            ColorAttribute attr = (ColorAttribute) mtlComp.mtl.get(ColorAttribute.Diffuse);
+            attr.color.set(Color.GREEN);
+        }else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+            ColorAttribute attr = (ColorAttribute) mtlComp.mtl.get(ColorAttribute.Diffuse);
+            attr.color.set(Color.BLUE);
+        }
+
         super.render();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
