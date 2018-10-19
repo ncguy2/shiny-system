@@ -2,5 +2,5 @@ rootProject.name = 'Game'
 
 include 'foundation', 'core', 'desktop'
 
-include 'Modules/gameWorld'
-include 'Modules/renderer'
+include 'Modules:gameWorld'
+include 'Modules:renderer'

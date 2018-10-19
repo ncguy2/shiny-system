@@ -2,6 +2,6 @@
 eclipse.project.name = appName + '-core'
 
 dependencies {
-    compile project(':Modules/renderer')
-    compile project(':Modules/gameWorld')
+    compile project(':Modules:renderer')
+    compile project(':Modules:gameWorld')
 }

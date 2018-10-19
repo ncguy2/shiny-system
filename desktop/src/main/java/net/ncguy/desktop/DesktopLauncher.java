@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import net.ncguy.core.GameLauncher;
 
+import java.lang.management.ManagementFactory;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -11,8 +12,7 @@ import java.util.Scanner;
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {
     public static void main(String[] args) {
-        long pid = ProcessHandle.current().pid();
-        System.out.println("Process id: " + pid);
+        System.out.println(ManagementFactory.getRuntimeMXBean().getName());
 
         List<String> argList = Arrays.asList(args);
         if(argList.contains("--renderdoc") || argList.contains("-r")) {

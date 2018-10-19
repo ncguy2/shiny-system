@@ -17,10 +17,10 @@ allprojects {
     apply plugin: 'java'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_9
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 configure(subprojects) {
-    sourceCompatibility = JavaVersion.VERSION_1_9
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
 subprojects {
@@ -41,7 +41,7 @@ tasks.eclipse.doLast {
 }
 
 import com.badlogic.gdx.tools.texturepacker.TexturePacker
-task pack << {
+task pack doLast {
     TexturePacker.process(
             'raw/ui',
             'assets/ui',
