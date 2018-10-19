@@ -2,14 +2,26 @@ package net.ncguy.foundation.data;
 
 import net.ncguy.foundation.data.components.SceneComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 public class Entity {
 
-    public final Transform transform;
+    private List<Consumer<Float>> updateFuncs;
     private SceneComponent<?> rootComponent;
 
     public Entity() {
-        transform = new Transform();
+        updateFuncs = new ArrayList<>();
         RootComponent(new SceneComponent<>()).Name("Root");
+    }
+
+    public void onUpdate(Consumer<Float> func) {
+        updateFuncs.add(func);
+    }
+
+    public Transform transform() {
+        return rootComponent.transform;
     }
 
     public SceneComponent<?> getRootComponent() {
@@ -22,6 +34,7 @@ public class Entity {
     }
 
     public void update(float delta) {
+        updateFuncs.forEach(f -> f.accept(delta));
         rootComponent.update(delta);
     }
 }

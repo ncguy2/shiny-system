@@ -33,4 +33,27 @@ public class Transform {
         return worldTransform;
     }
 
+    public void set(Matrix4 mat) {
+        mat.getTranslation(translation);
+        mat.getRotation(rotation);
+        mat.getScale(scale);
+    }
+
+    public Vector3 forward() {
+        Matrix4 rotMat = new Matrix4();
+        rotation.toMatrix(rotMat.val);
+
+        float[] m = rotMat.getValues();
+
+        Vector3 vector3 = new Vector3(m[5], -m[6], m[7]);
+        return vector3;
+    }
+
+    public Vector3 up() {
+        return Vector3.Y;
+    }
+
+    public Vector3 right() {
+        return Vector3.Z.cpy().scl(-1).mul(rotation);
+    }
 }
