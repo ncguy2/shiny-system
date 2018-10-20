@@ -203,7 +203,6 @@ public class GameLauncher extends Game {
         stage.draw();
 
         ProfilerHost.EndFrame();
-
         ProfilerHost.Clear();
 
         GPUTaskProfile tp;
