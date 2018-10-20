@@ -2,6 +2,13 @@
 eclipse.project.name = appName + '-render-module'
 
 dependencies {
-    compile project(':photon')
+    prj = findProject(':Photon')
+
+    if(prj != null) {
+        compile prj
+    } else {
+        compile fileTree("libs/Photon-0.0.1-SNAPSHOT.jar")
+    }
+
     compile project(':foundation')
 }
