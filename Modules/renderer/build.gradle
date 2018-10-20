@@ -3,7 +3,7 @@ eclipse.project.name = appName + '-render-module'
 
 dependencies {
     def prj = findProject(':Photon')
-
+    
     if(prj != null) {
         compile prj
     } else {
