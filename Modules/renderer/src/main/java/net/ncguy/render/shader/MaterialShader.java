@@ -1,11 +1,18 @@
 package net.ncguy.render.shader;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
+import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import net.ncguy.Photon;
+
+import static com.badlogic.gdx.graphics.GL20.*;
+import static com.badlogic.gdx.graphics.GL30.GL_TEXTURE_3D;
 
 public class MaterialShader extends DefaultShader {
     public MaterialShader(Renderable renderable) {
@@ -26,6 +33,25 @@ public class MaterialShader extends DefaultShader {
 
     public MaterialShader(Renderable renderable, Config config, ShaderProgram shaderProgram) {
         super(renderable, config, shaderProgram);
+    }
+
+    @Override
+    public void begin(Camera camera, RenderContext context) {
+        super.begin(camera, context);
+
+        program.setUniformi("u_photonEnabled", Photon.volumeTextureHandle > 0 ? GL_TRUE : GL_FALSE);
+
+        if(Photon.volumeTextureHandle > 0) {
+            Gdx.gl.glActiveTexture(GL_TEXTURE8);
+            Gdx.gl.glBindTexture(GL_TEXTURE_3D, Photon.volumeTextureHandle);
+            program.setUniformi("u_photonVolume", 8);
+
+            program.setUniformf("u_photonIntensity", Photon.globalLightIntensity);
+            program.setUniformf("u_photonOrigin", Photon.actualOrigin);
+            program.setUniformf("u_photonExtents", Photon.actualExtents);
+
+            Gdx.gl.glActiveTexture(GL_TEXTURE0);
+        }
     }
 
     @Override

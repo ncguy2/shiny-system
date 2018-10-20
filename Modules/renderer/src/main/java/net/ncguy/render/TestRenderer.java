@@ -1,49 +1,36 @@
 package net.ncguy.render;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import net.ncguy.foundation.tools.profile.ProfilerHost;
+import net.ncguy.photon.debug.PhotonSampleDebugRenderer;
 import net.ncguy.render.shader.MaterialShader;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestRenderer extends BasicRenderer {
 
     ModelBatch batch;
     public PerspectiveCamera camera;
     Environment environment;
+    PhotonSampleDebugRenderer renderer;
 
     @Override
     public void init() {
+        ShaderProgram.pedantic = false;
+        ShaderProgram.prependVertexCode = "#version 130\n";
+        ShaderProgram.prependFragmentCode = "#version 130\n";
         batch = new ModelBatch(new DefaultShaderProvider() {
-            Map<Renderable, Long> materialMasks = new HashMap<>();
-            @Override
-            public Shader getShader(Renderable renderable) {
-                if(materialMasks.containsKey(renderable)) {
-                    if(materialMasks.get(renderable) == renderable.material.getMask()) {
-                        if(renderable.shader != null) {
-                            return renderable.shader;
-                        }
-                    }
-                }
-                return createShader(renderable);
-            }
-
             @Override
             protected Shader createShader(Renderable renderable) {
-                if(renderable.shader != null) {
-                    renderable.shader.dispose();
-                    renderable.shader = null;
-                }
-                MaterialShader shader = new MaterialShader(renderable);
-                shader.init();
-                renderable.shader = shader;
-                materialMasks.put(renderable, renderable.material.getMask());
-                return shader;
+                config.vertexShader = Gdx.files.internal("shaders/default.vertex.glsl").readString();
+                config.fragmentShader = Gdx.files.internal("shaders/default.fragment.glsl").readString();
+                return new MaterialShader(renderable, config);
             }
         });
         environment = new Environment();
@@ -55,13 +42,22 @@ public class TestRenderer extends BasicRenderer {
         camera.lookAt(Vector3.X);
         camera.near = 0.1f;
         camera.far = 1024.f;
+
+        renderer = new PhotonSampleDebugRenderer();
     }
 
     @Override
     public void render(RenderableProvider provider) {
+        ProfilerHost.Start("TestRenderer::render");
         batch.begin(camera);
         batch.render(provider, environment);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.TAB)) {
+            renderer.render(batch, environment);
+        }
+
         batch.end();
+        ProfilerHost.End();
     }
 
     @Override

@@ -15,8 +15,8 @@ public class PerspectiveCameraComponent extends CameraComponent<PerspectiveCamer
     public PerspectiveCamera buildCamera(Props props) {
 
         PerspectiveCamera camera = new PerspectiveCamera();
-        camera.near = props.near;
-        camera.far = props.far;
+        camera.near = props.fNear;
+        camera.far = props.fFar;
         camera.fieldOfView = props.fov;
 
         return camera;

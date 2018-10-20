@@ -18,6 +18,10 @@ public class RenderWrapper implements Disposable {
         renderer.resize(width, height);
     }
 
+    public WorldRenderProvider getProvider() {
+        return provider;
+    }
+
     public void resize(int width, int height) {
         renderer.resize(width, height);
     }

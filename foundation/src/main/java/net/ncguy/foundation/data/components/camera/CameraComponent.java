@@ -2,12 +2,11 @@ package net.ncguy.foundation.data.components.camera;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
 import net.ncguy.foundation.data.components.SceneComponent;
 
 public abstract class CameraComponent<T extends Camera, P extends CameraComponent.CameraProps> extends SceneComponent<CameraComponent> {
 
+    public boolean bIsCameraAttached;
     public T camera;
 
     public CameraComponent() {
@@ -24,20 +23,18 @@ public abstract class CameraComponent<T extends Camera, P extends CameraComponen
     @Override
     public void update(float delta) {
         super.update(delta);
-        Matrix4 transform = this.transform.worldTransform();
-        transform.getTranslation(camera.position);
 
-        camera.lookAt(this.transform.forward().add(camera.position));
-        camera.up.set(Vector3.Y);
+        if (bIsCameraAttached) {
+//            camera.view.setToLookAt(position, tmp.set(position).add(direction), up);
+        } else {
+            camera.update();
+        }
 
-
-        camera.update();
     }
 
     public void resize(P props) {
-        camera.viewportWidth = props.viewportWidth;
-        camera.viewportHeight = props.viewportHeight;
-        camera.update();
+        camera.viewportWidth = props.fViewportWidth;
+        camera.viewportHeight = props.fViewportHeight;
     }
 
     public abstract T buildCamera(P props);
@@ -47,10 +44,11 @@ public abstract class CameraComponent<T extends Camera, P extends CameraComponen
     }
 
     public static class CameraProps {
-        public float near = 0.1f;
-        public float far = 1024.f;
-        public float viewportWidth = Gdx.graphics.getWidth();
-        public float viewportHeight = Gdx.graphics.getHeight();
+        public boolean bIsCameraAttached = false;
+        public float fNear = 0.1f;
+        public float fFar = 1024.f;
+        public float fViewportWidth = Gdx.graphics.getWidth();
+        public float fViewportHeight = Gdx.graphics.getHeight();
     }
 
 }

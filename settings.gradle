@@ -4,3 +4,6 @@ include 'foundation', 'core', 'desktop'
 
 include 'Modules:gameWorld'
 include 'Modules:renderer'
+
+includeFlat 'Photon'
+findProject(':Photon')?.name = 'photon'

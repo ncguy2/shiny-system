@@ -2,5 +2,6 @@
 eclipse.project.name = appName + '-render-module'
 
 dependencies {
+    compile project(':photon')
     compile project(':foundation')
 }
