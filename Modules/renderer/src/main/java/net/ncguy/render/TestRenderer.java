@@ -2,6 +2,7 @@ package net.ncguy.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -66,9 +67,19 @@ public class TestRenderer extends BasicRenderer {
     }
 
     @Override
-    public void resize(int width, int height) {
+    public void doResize(int width, int height) {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
         camera.update();
+    }
+
+    @Override
+    public Camera camera() {
+        return camera;
+    }
+
+    @Override
+    public void camera(Camera c) {
+        camera = (PerspectiveCamera) c;
     }
 }

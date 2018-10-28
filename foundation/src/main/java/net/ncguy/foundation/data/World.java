@@ -1,5 +1,7 @@
 package net.ncguy.foundation.data;
 
+import com.sun.javafx.collections.ObservableListWrapper;
+import javafx.collections.ListChangeListener;
 import net.ncguy.foundation.data.components.SceneComponent;
 
 import java.util.ArrayList;
@@ -7,10 +9,14 @@ import java.util.List;
 
 public class World {
 
-    private final List<Entity> entityList;
+    private final ObservableListWrapper<Entity> entityList;
 
     public World() {
-        entityList = new ArrayList<>();
+        entityList = new ObservableListWrapper<>(new ArrayList<>());
+    }
+
+    public void addListener(ListChangeListener<Entity> listener) {
+        entityList.addListener(listener);
     }
 
     public Entity add() {

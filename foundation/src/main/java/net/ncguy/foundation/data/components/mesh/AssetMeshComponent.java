@@ -16,9 +16,15 @@ public class AssetMeshComponent extends MeshComponent<AssetMeshComponent> {
     }
 
     protected String assetPath;
+    protected RendererType rendererType;
 
-    public AssetMeshComponent() {}
+    public AssetMeshComponent() {
+        setRendererType(RendererType.SKELETAL);
+    }
 
+    public void setRendererType(RendererType rendererType) {
+        this.rendererType = rendererType;
+    }
 
     public void setAssetPath(String path) {
         if(Objects.equals(this.assetPath, path)) {
@@ -34,9 +40,17 @@ public class AssetMeshComponent extends MeshComponent<AssetMeshComponent> {
     }
 
     @Override
+    public RendererType getRenderType() {
+        return rendererType;
+    }
+
+    @Override
     public ModelInstance buildInstance() {
         AssetHandler.instance().GetAsync(this.assetPath, Model.class, m -> Gdx.app.postRunnable(() -> this.instance = new ModelInstance(m)));
         return null;
     }
 
+    public String getAssetPath() {
+        return this.assetPath;
+    }
 }

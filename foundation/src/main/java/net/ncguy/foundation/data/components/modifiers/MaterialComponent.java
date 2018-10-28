@@ -22,8 +22,8 @@ public class MaterialComponent extends ModifierComponent<MaterialComponent> {
     }
 
     @Override
-    public void update(float delta) {
-        if(mtl != null) {
+    public void applyModification(float delta) {
+        if (mtl != null) {
             Aspect.of(parentComponent, CommonAspectKeys.MODEL_INSTANCE)
                     .ifPresent(asp -> {
                         ModelInstance inst = asp.getObject();
@@ -36,6 +36,5 @@ public class MaterialComponent extends ModifierComponent<MaterialComponent> {
                     });
         }
 
-        super.update(delta);
     }
 }

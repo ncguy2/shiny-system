@@ -1,0 +1,18 @@
+apply plugin: 'application'
+
+sourceSets.main.resources.srcDirs += [ rootProject.file('assets').absolutePath ]
+mainClassName = 'net.ncguy.desktop.DesktopLauncher'
+eclipse.project.name = appName + '-editor-GameWorld'
+
+dependencies {
+    compile project(':Editor:Core')
+}
+
+jar {
+    archiveName "${appName}-${version}.jar"
+    from { configurations.compile.collect { zipTree(it) } }
+}
+
+run {
+    ignoreExitValue = true
+}

@@ -24,12 +24,17 @@ public abstract class MeshComponent<T extends MeshComponent> extends SceneCompon
             instance = buildInstance();
         }
 
-        if(instance != null) {
+        if (instance != null) {
             instance.transform.set(this.transform.worldTransform());
+            if (instance.userData == null) {
+                instance.userData = this;
+            }
         }
 
         return instance;
     }
+
+    public abstract RendererType getRenderType();
 
     public abstract ModelInstance buildInstance();
 
@@ -47,4 +52,11 @@ public abstract class MeshComponent<T extends MeshComponent> extends SceneCompon
     public void getRenderables(Array<Renderable> renderables, Pool<Renderable> pool) {
         getInstance().ifPresent(m -> m.getRenderables(renderables, pool));
     }
+
+    public static enum RendererType {
+        STATIC,
+        SKELETAL,
+//        CUSTOM
+    }
+
 }

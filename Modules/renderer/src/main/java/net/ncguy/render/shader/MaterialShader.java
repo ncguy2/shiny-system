@@ -39,16 +39,16 @@ public class MaterialShader extends DefaultShader {
     public void begin(Camera camera, RenderContext context) {
         super.begin(camera, context);
 
-        program.setUniformi("u_photonEnabled", Photon.volumeTextureHandle > 0 ? GL_TRUE : GL_FALSE);
+        program.setUniformi("u_photonEnabled", Photon.Offline.volumeTextureHandle > 0 ? GL_TRUE : GL_FALSE);
 
-        if(Photon.volumeTextureHandle > 0) {
+        if(Photon.Offline.CanRender()) {
             Gdx.gl.glActiveTexture(GL_TEXTURE8);
-            Gdx.gl.glBindTexture(GL_TEXTURE_3D, Photon.volumeTextureHandle);
+            Gdx.gl.glBindTexture(GL_TEXTURE_3D, Photon.Offline.volumeTextureHandle);
             program.setUniformi("u_photonVolume", 8);
 
-            program.setUniformf("u_photonIntensity", Photon.globalLightIntensity);
-            program.setUniformf("u_photonOrigin", Photon.actualOrigin);
-            program.setUniformf("u_photonExtents", Photon.actualExtents);
+            program.setUniformf("u_photonIntensity", Photon.Offline.globalLightIntensity);
+            program.setUniformf("u_photonOrigin", Photon.Offline.actualOrigin);
+            program.setUniformf("u_photonExtents", Photon.Offline.actualExtents);
 
             Gdx.gl.glActiveTexture(GL_TEXTURE0);
         }

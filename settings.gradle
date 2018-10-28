@@ -7,3 +7,6 @@ include 'Modules:renderer'
 
 includeFlat 'Photon'
 findProject(':Photon')?.name = 'photon'
+
+// Editor modules
+include 'Editor:core'

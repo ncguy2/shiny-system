@@ -3,6 +3,7 @@ package net.ncguy.desktop;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import net.ncguy.core.GameLauncher;
+import net.ncguy.foundation.Initialiser;
 
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
@@ -20,14 +21,20 @@ public class DesktopLauncher {
             new Scanner(System.in).next();
         }
 
-        createApplication();
+        Initialiser.Initialize();
+
+        createApplication(args);
     }
 
-    private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new GameLauncher(), getDefaultConfiguration());
+    public static Lwjgl3Application createApplication(String[] args) {
+        return createApplication(args, getDefaultConfiguration());
     }
 
-    private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
+    public static Lwjgl3Application createApplication(String[] args, Lwjgl3ApplicationConfiguration cfg) {
+        return new Lwjgl3Application(new GameLauncher(args), cfg);
+    }
+
+    public static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
         int[] sizes = {128, 64, 32, 16};
         String[] paths = new String[sizes.length];

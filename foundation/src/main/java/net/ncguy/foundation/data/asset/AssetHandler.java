@@ -182,10 +182,15 @@ public class AssetHandler implements Disposable {
 
         FileHandle handle = Gdx.files.internal(path);
 
+        if(handle.exists() && handle.isDirectory()) {
+            return;
+        }
+
+
         if (!handle.exists())
             handle = Gdx.files.external(path);
 
-        if (!handle.exists() || handle.isDirectory())
+        if (!handle.exists() || handle.isDirectory() || handle.extension().isEmpty())
             return;
 
         path = handle.path();

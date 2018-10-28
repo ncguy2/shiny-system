@@ -39,4 +39,12 @@ public class Transform {
         mat.getScale(scale);
     }
 
+    public Vector3 getTranslation() {
+        return translation;
+    }
+
+    public Vector3 getScale() {
+        return scale;
+    }
+
 }

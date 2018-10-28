@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 
-public class CubeComponent extends MeshComponent<CubeComponent> {
+public class CubeComponent extends StaticMeshComponent<CubeComponent> {
 
     @Override
     public ModelInstance buildInstance() {

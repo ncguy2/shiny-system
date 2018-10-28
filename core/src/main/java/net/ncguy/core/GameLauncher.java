@@ -4,10 +4,13 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.Separator;
@@ -27,8 +30,9 @@ import net.ncguy.foundation.utils.DeferredCalls;
 import net.ncguy.photon.PLight;
 import net.ncguy.photon.PWorld;
 import net.ncguy.photon.ThreadPool;
+import net.ncguy.render.BasicRenderer;
+import net.ncguy.render.DeferredRenderer;
 import net.ncguy.render.RenderWrapper;
-import net.ncguy.render.TestRenderer;
 import net.ncguy.world.WorldModule;
 
 import java.util.ArrayList;
@@ -37,6 +41,7 @@ import java.util.function.Supplier;
 
 public class GameLauncher extends Game {
 
+    private final String[] launchArguments;
     RenderWrapper renderWrapper;
     WorldModule worldModule;
     Entity cubeEntity;
@@ -55,6 +60,8 @@ public class GameLauncher extends Game {
     VisLabel extentsLabel;
     VisLabel intensityLabel;
 
+    Image renderTarget;
+
     public static class PollingLabel extends VisLabel {
 
         private final Supplier<String> supplier;
@@ -67,6 +74,10 @@ public class GameLauncher extends Game {
             setText(supplier.get());
             super.act(delta);
         }
+    }
+
+    public GameLauncher(String[] launchArguments) {
+        this.launchArguments = launchArguments;
     }
 
     @Override
@@ -82,7 +93,7 @@ public class GameLauncher extends Game {
         mtlComp = cubeEntity.getRootComponent().add(new MaterialComponent());
         mtlComp.mtl.set(ColorAttribute.createDiffuse(Color.RED));
 
-        TestRenderer renderer = new TestRenderer();
+        BasicRenderer renderer = new DeferredRenderer();
         renderWrapper = new RenderWrapper(world, renderer, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         worldModule = new WorldModule(world);
         worldModule.dispatch();
@@ -91,7 +102,7 @@ public class GameLauncher extends Game {
 
         SceneComponent<?> rootComponent = camera.getRootComponent();
         c = ((PerspectiveCameraComponent) rootComponent).getCamera();
-        renderer.camera = (PerspectiveCamera) c;
+        renderer.camera(c);
 
         c.position.set(10, 10, 10);
         c.lookAt(0, 0, 0);
@@ -106,7 +117,6 @@ public class GameLauncher extends Game {
         Entity add = world.add(AssetMeshComponent.of("mesh/mythra/mythra.g3dj"));
         add.transform().scale.set(.1f, .1f, .1f);
         add.transform().translation.set(0, 0, -2);
-//        world.add(AssetMeshComponent.of("mesh/kurumi/Kurumi Fragmented.g3db"));
 
         pWorld = new PWorld(renderWrapper.getProvider());
 
@@ -115,13 +125,16 @@ public class GameLauncher extends Game {
         label.setText("");
         stage.addActor(label);
 
+        renderTarget = new Image();
+        stage.addActor(renderTarget);
+
         container = new VisTable();
         stage.addActor(container);
 
-        originLabel = new PollingLabel(Photon.actualOrigin::toString);
-        stepsizeLabel = new PollingLabel(Photon.actualStepSize::toString);
-        extentsLabel = new PollingLabel(Photon.actualExtents::toString);
-        intensityLabel = new PollingLabel(() -> Photon.globalLightIntensity + "");
+        originLabel = new PollingLabel(Photon.Offline.actualOrigin::toString);
+        stepsizeLabel = new PollingLabel(Photon.Offline.actualStepSize::toString);
+        extentsLabel = new PollingLabel(Photon.Offline.actualExtents::toString);
+        intensityLabel = new PollingLabel(() -> Photon.Offline.globalLightIntensity + "");
 
         container.defaults().height(24);
         container.columnDefaults(0).growX().right();
@@ -157,6 +170,10 @@ public class GameLauncher extends Game {
         stage.getCamera().viewportHeight = height;
         stage.getCamera().update();
         setLabelText(label.getText().toString());
+
+        renderTarget.setBounds(0, 0, width, height);
+        renderTarget.toBack();
+
         container.setBounds(8, 8, 192, 96);
     }
 
@@ -174,7 +191,7 @@ public class GameLauncher extends Game {
 
         DeferredCalls.Update(delta);
 
-        Photon.globalLightIntensity = 8f;
+        Photon.Offline.globalLightIntensity = 8f;
 
         Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond() + ", delta: " + (delta * 1000f) + "ms");
 
@@ -197,7 +214,11 @@ public class GameLauncher extends Game {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        renderWrapper.render();
+        Texture tex = renderWrapper.renderToTexture();
+        TextureRegion reg = new TextureRegion(tex);
+        reg.flip(false, true);
+        TextureRegionDrawable drawable = new TextureRegionDrawable(reg);
+        renderTarget.setDrawable(drawable);
 
         stage.act(delta);
         stage.draw();
@@ -237,9 +258,9 @@ public class GameLauncher extends Game {
                     lights.add(new PLight(new Vector3(0, 12.5f, 0), Color.GREEN));
                     lights.add(new PLight(new Vector3(0, 10f, 2.5f), Color.BLUE));
                     lights.add(new PLight(new Vector3(0, 15f, 3f), Color.MAGENTA));
-                    Photon.targetOrigin.set(new Vector3(0, 5, 0));
-                    Photon.targetStepSize.set(new Vector3(1, 3, 1));
-                    Photon.BuildTexture(tris, lights, 16);
+                    Photon.Offline.targetOrigin.set(new Vector3(0, 5, 0));
+                    Photon.Offline.targetStepSize.set(new Vector3(1, 3, 1));
+                    Photon.Offline.BuildTexture(tris, lights, 16);
                     long endTime = System.currentTimeMillis();
                     long endFrame = Gdx.graphics.getFrameId();
 
@@ -255,6 +276,7 @@ public class GameLauncher extends Game {
         super.dispose();
         renderWrapper.dispose();
         worldModule.stop();
+        Photon.Offline.dispose();
         AssetHandler.Dispose();
     }
 }
