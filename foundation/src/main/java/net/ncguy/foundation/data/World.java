@@ -4,15 +4,18 @@ import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.collections.ListChangeListener;
 import net.ncguy.foundation.data.components.SceneComponent;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class World {
 
     private final ObservableListWrapper<Entity> entityList;
+    private final UpdateHandler updateHandler;
 
     public World() {
         entityList = new ObservableListWrapper<>(new ArrayList<>());
+        updateHandler = new UpdateHandler(entityList);
     }
 
     public void addListener(ListChangeListener<Entity> listener) {
@@ -33,6 +36,12 @@ public class World {
         return e;
     }
 
+    public Entity add(Class<? extends SceneComponent> rootComponent) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Entity e = add();
+        e.RootComponent(rootComponent);
+        return e;
+    }
+
     /** @return A new list instance containing the contents of entityList at the time of invocation */
     public List<Entity> getEntities() {
         synchronized (entityList) {
@@ -40,7 +49,11 @@ public class World {
         }
     }
 
+    public ObservableListWrapper<Entity> getObservableEntityList() {
+        return entityList;
+    }
+
     public void update(float delta) {
-        getEntities().forEach(e -> e.update(delta));
+        updateHandler.start(delta);
     }
 }

@@ -1,11 +1,16 @@
 package net.ncguy.foundation.data.components;
 
 import net.ncguy.foundation.data.Transform;
+import net.ncguy.foundation.data.UpdatePhase;
 import net.ncguy.foundation.data.aspect.Aspect;
 import net.ncguy.foundation.data.aspect.AspectKey;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class SceneComponent<T extends SceneComponent> extends EntityComponent<T> {
 
@@ -21,6 +26,21 @@ public class SceneComponent<T extends SceneComponent> extends EntityComponent<T>
         childComponents.add(component);
         component._onAddToComponent(this);
         return component;
+    }
+
+    public <T extends EntityComponent<?>> T add(Class<T> componentClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<T> ctor = componentClass.getConstructor();
+        T inst = ctor.newInstance();
+        return add(inst);
+    }
+
+    public <T extends EntityComponent<?>> List<T> get(Class<T> type, boolean includeSubtypes) {
+        Predicate<Class<?>> filter = includeSubtypes ? type::isInstance : type::equals;
+
+        return childComponents.stream()
+                .filter(c -> filter.test(c.getClass()))
+                .map(type::cast)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -48,8 +68,9 @@ public class SceneComponent<T extends SceneComponent> extends EntityComponent<T>
     }
 
     @Override
-    public void update(float delta) {
-        childComponents.forEach(c -> c.update(delta));
-        super.update(delta);
+    public void update(UpdatePhase phase, float delta) {
+        childComponents.forEach(c -> c.update(phase, delta));
+        super.update(phase, delta);
     }
+
 }

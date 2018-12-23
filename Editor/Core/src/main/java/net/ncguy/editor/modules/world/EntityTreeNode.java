@@ -11,4 +11,11 @@ public class EntityTreeNode extends ComponentTreeNode {
         this.entity = entity;
     }
 
+    public boolean containsEntity(Entity e) {
+        return this.entity.equals(e);
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
 }

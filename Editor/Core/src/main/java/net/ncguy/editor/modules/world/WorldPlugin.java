@@ -1,9 +1,13 @@
 package net.ncguy.editor.modules.world;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import net.ncguy.editor.editor.ui.EditorRegistry;
 import net.ncguy.editor.editor.ui.registry.TabPageRegistry;
 import net.ncguy.editor.modules.world.adapter.AssetMeshComponentAdapter;
@@ -53,6 +57,13 @@ public class WorldPlugin implements IPlugin {
 
             World world = registry.provideAspect(CommonAspectKeys.WORLD).getObject();
             EntityTree tree = new EntityTree(world);
+            VisTextButton updateBtn = new VisTextButton("Refresh entity tree");
+            updateBtn.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    tree.update();
+                }
+            });
 
             tree.addListener(new ChangeListener() {
                 @Override
@@ -71,8 +82,8 @@ public class WorldPlugin implements IPlugin {
                 }
             });
             VisTable visTable = new VisTable();
-            visTable.add(tree).grow().row();
-
+            visTable.add(new VisScrollPane(tree)).grow().row();
+            visTable.add(updateBtn).growX().row();
             return visTable;
         }));
     }

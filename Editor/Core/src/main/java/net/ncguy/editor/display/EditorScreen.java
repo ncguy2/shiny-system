@@ -35,6 +35,7 @@ public class EditorScreen implements Screen {
     Stage stage;
     ScreenViewport stageViewport;
     OrthographicCamera stageCamera;
+    WorldModule worldModule;
 
     @Override
     public void show() {
@@ -80,7 +81,7 @@ public class EditorScreen implements Screen {
 
         BasicRenderer renderer = new DeferredRenderer();
 
-        WorldModule worldModule = new WorldModule(world);
+        worldModule = new WorldModule(world);
         worldModule.dispatch();
 
         FBO.Builder builder = new FBO.Builder(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -122,11 +123,11 @@ public class EditorScreen implements Screen {
 
     @Override
     public void hide() {
-
+        worldModule.stop();
+        worldModule = null;
     }
 
     @Override
     public void dispose() {
-
     }
 }

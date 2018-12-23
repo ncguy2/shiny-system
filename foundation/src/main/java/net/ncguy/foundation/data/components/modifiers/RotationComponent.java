@@ -6,6 +6,9 @@ import net.ncguy.foundation.data.Transform;
 import net.ncguy.foundation.data.aspect.Aspect;
 import net.ncguy.foundation.data.aspect.CommonAspectKeys;
 
+/**
+ * Rotates the owning component around an axis
+ */
 public class RotationComponent extends ModifierComponent<RotationComponent> {
 
     public Vector3 axis = Vector3.Y.cpy();

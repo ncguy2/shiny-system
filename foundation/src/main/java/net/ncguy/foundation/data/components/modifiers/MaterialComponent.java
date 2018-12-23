@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import net.ncguy.foundation.data.aspect.Aspect;
 import net.ncguy.foundation.data.aspect.CommonAspectKeys;
 
+/**
+ * Sets the material of the owning components material instance, if it exists
+ */
 public class MaterialComponent extends ModifierComponent<MaterialComponent> {
 
     public Material mtl;

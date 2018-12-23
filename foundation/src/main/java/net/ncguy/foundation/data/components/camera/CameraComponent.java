@@ -21,8 +21,8 @@ public abstract class CameraComponent<T extends Camera, P extends CameraComponen
     }
 
     @Override
-    public void update(float delta) {
-        super.update(delta);
+    public void updatePhysics(float delta) {
+        super.updatePhysics(delta);
 
         if (bIsCameraAttached) {
 //            camera.view.setToLookAt(position, tmp.set(position).add(direction), up);

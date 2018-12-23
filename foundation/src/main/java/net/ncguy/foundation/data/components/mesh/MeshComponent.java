@@ -8,7 +8,9 @@ import com.badlogic.gdx.utils.Pool;
 import net.ncguy.foundation.data.aspect.Aspect;
 import net.ncguy.foundation.data.aspect.AspectKey;
 import net.ncguy.foundation.data.components.SceneComponent;
+import net.ncguy.foundation.data.components.modifiers.ShaderComponent;
 
+import java.util.List;
 import java.util.Optional;
 
 public abstract class MeshComponent<T extends MeshComponent> extends SceneComponent<T> implements RenderableProvider {
@@ -50,7 +52,15 @@ public abstract class MeshComponent<T extends MeshComponent> extends SceneCompon
 
     @Override
     public void getRenderables(Array<Renderable> renderables, Pool<Renderable> pool) {
-        getInstance().ifPresent(m -> m.getRenderables(renderables, pool));
+        getInstance().ifPresent(m -> {
+            Array<Renderable> r = new Array<>();
+            m.getRenderables(r, pool);
+            renderables.addAll(r);
+
+            List<ShaderComponent> c = get(ShaderComponent.class, true);
+            if (c.isEmpty()) return;
+            r.forEach(renderable -> renderable.shader = c.get(0).shader);
+        });
     }
 
     public static enum RendererType {

@@ -22,4 +22,9 @@ public class EditorGame extends Game {
         AssetHandler.WithInstanceIfExists(AssetHandler::Update);
         super.render();
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
 }
